@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Мини-маркетплейс</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <!-- SheetJS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script defer src="./js/main.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="container header__inner">
+      <a class="brand" href="./index.html">MiniMarket</a>
+
+      <nav class="nav">
+        <a class="nav__link" href="./cart.html">
+          Корзина
+          <span id="cartCount" class="badge">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="toolbar">
+      <h1 class="title">Товары</h1>
+      <div class="muted" id="status">Загрузка товаров…</div>
+    </div>
+
+    <section id="products" class="grid"></section>
+  </main>
+
+  <footer class="footer">
+    <div class="container muted">Client-side demo • Excel → карточки • localStorage</div>
+  </footer>
+</body>
+</html>
