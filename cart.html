@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Корзина</title>
+    <title>Cart</title>
     <link rel="shortcut icon" href="./images/icon.svg" type="image/x-icon">
     <link rel="stylesheet" href="./css/style.css" />
     <script defer src="./js/cart.js"></script>
@@ -14,9 +14,9 @@
         <a class="brand" href="./index.html">MiniMarket</a>
 
         <nav class="nav">
-          <a class="nav__link" href="./index.html">← Назад к товарам</a>
+          <a class="nav__link" href="./index.html">← Back to products</a>
           <span class="nav__link">
-            В корзине:
+            In cart:
             <span id="cartCount" class="badge">0</span>
           </span>
         </nav>
@@ -25,7 +25,7 @@
 
     <main class="container">
       <div class="toolbar">
-        <h1 class="title">Корзина</h1>
+        <h1 class="title">Shopping Cart</h1>
         <div class="muted" id="status"></div>
       </div>
 
@@ -33,38 +33,34 @@
 
       <div class="summary">
         <div class="summary__row">
-          <span class="muted">Итого:</span>
+          <span class="muted">Total:</span>
           <strong id="total">0</strong>
         </div>
 
         <div class="summary__actions">
-          <button id="buyBtn" class="btn btn--primary">Купить</button>
-          <button id="clearBtn" class="btn">Очистить корзину</button>
+          <button id="buyBtn" class="btn btn--primary">Checkout</button>
+          <button id="clearBtn" class="btn">Clear Cart</button>
         </div>
       </div>
     </main>
 
     <footer class="footer">
-      <div class="container muted">localStorage корзина • удаление • сумма</div>
+      <div class="container muted">localStorage cart • remove • total calculation</div>
     </footer>
+
     <div id="modal" class="modal" aria-hidden="true">
       <div class="modal__backdrop" data-close></div>
 
-      <div
-        class="modal__panel"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modalTitle"
-      >
+      <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="modal__header">
-          <h2 id="modalTitle" class="modal__title">Сообщение</h2>
-          <button class="icon-btn" data-close aria-label="Закрыть">×</button>
+          <h2 id="modalTitle" class="modal__title">Message</h2>
+          <button class="icon-btn" data-close aria-label="Close">×</button>
         </div>
 
         <div class="modal__body" id="modalBody"></div>
 
         <div class="modal__footer">
-          <button class="btn btn--primary" id="modalOk">Ок</button>
+          <button class="btn btn--primary" id="modalOk">OK</button>
         </div>
       </div>
     </div>

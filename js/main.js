@@ -23,7 +23,7 @@ function updateCartBadge() {
 }
 
 function formatPrice(num) {
-  // простая форматировка под RU (без валюты, можешь дописать "сум")
+  // Simple RU formatting (you can change currency label below)
   const n = Number(num) || 0;
   return n.toLocaleString("ru-RU");
 }
@@ -34,28 +34,31 @@ function createCard(product) {
 
   const img = document.createElement("img");
   img.className = "card__img";
-  img.alt = product.name || "Товар";
+  img.alt = product.name || "Product";
   img.src = product.link || "";
   img.loading = "lazy";
-  img.onerror = () => { img.src = ""; img.alt = "Нет изображения"; };
+  img.onerror = () => {
+    img.src = "";
+    img.alt = "No image";
+  };
 
   const body = document.createElement("div");
   body.className = "card__body";
 
   const name = document.createElement("h3");
   name.className = "card__name";
-  name.textContent = product.name || "Без названия";
+  name.textContent = product.name || "Unnamed product";
 
   const price = document.createElement("div");
   price.className = "card__price";
-  price.textContent = `${formatPrice(product.price)} сум`;
+  price.textContent = `${formatPrice(product.price)} sum`;
 
   const actions = document.createElement("div");
   actions.className = "card__actions";
 
   const addBtn = document.createElement("button");
   addBtn.className = "btn btn--primary";
-  addBtn.textContent = "Добавить в корзину";
+  addBtn.textContent = "Add to cart";
   addBtn.addEventListener("click", () => {
     const cart = getCart();
     const id = String(product.id);
@@ -66,9 +69,10 @@ function createCard(product) {
         name: product.name,
         price: Number(product.price) || 0,
         link: product.link || "",
-        qty: 0
+        qty: 0,
       };
     }
+
     cart[id].qty += 1;
 
     setCart(cart);
@@ -89,9 +93,10 @@ function createCard(product) {
 
 async function loadProductsFromExcel() {
   const status = document.getElementById("status");
+
   try {
     const res = await fetch("./products.xlsx");
-    if (!res.ok) throw new Error(`Не удалось загрузить products.xlsx (${res.status})`);
+    if (!res.ok) throw new Error(`Failed to load products.xlsx (${res.status})`);
 
     const buf = await res.arrayBuffer();
     const wb = XLSX.read(buf, { type: "array" });
@@ -99,24 +104,24 @@ async function loadProductsFromExcel() {
     const sheetName = wb.SheetNames[0];
     const ws = wb.Sheets[sheetName];
 
-    // Получаем массив объектов по заголовкам колонок
     const rows = XLSX.utils.sheet_to_json(ws, { defval: "" });
 
-    // Нормализация полей
     const products = rows
-      .map(r => ({
+      .map((r) => ({
         id: r.id ?? r.ID ?? r.Id,
         name: r.name ?? r.Name ?? r.NAME,
         price: r.price ?? r.Price ?? r.PRICE,
-        link: r.link ?? r.Link ?? r.LINK
+        link: r.link ?? r.Link ?? r.LINK,
       }))
-      .filter(p => p.id !== undefined && p.id !== null && String(p.id).trim() !== "");
+      .filter(
+        (p) => p.id !== undefined && p.id !== null && String(p.id).trim() !== ""
+      );
 
-    if (status) status.textContent = `Товаров: ${products.length}`;
+    if (status) status.textContent = `Products: ${products.length}`;
 
     return products;
   } catch (e) {
-    if (status) status.textContent = "Ошибка загрузки товаров. Запусти через Live Server.";
+    if (status) status.textContent = "Error loading products. Run via a server.";
     console.error(e);
     return [];
   }
@@ -134,7 +139,7 @@ async function loadProductsFromExcel() {
   if (products.length === 0) {
     const empty = document.createElement("div");
     empty.className = "muted";
-    empty.textContent = "Нет товаров или не удалось прочитать Excel.";
+    empty.textContent = "No products found or failed to read Excel.";
     list.appendChild(empty);
     return;
   }

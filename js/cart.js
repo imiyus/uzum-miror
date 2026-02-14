@@ -55,6 +55,7 @@ function openModal(title, message) {
 function closeModal() {
   const modal = document.getElementById("modal");
   if (!modal) return;
+
   modal.classList.remove("is-open");
   modal.setAttribute("aria-hidden", "true");
 }
@@ -68,7 +69,6 @@ function bindModal() {
 
   modal.addEventListener("click", (e) => {
     const t = e.target;
-    // закрытие по клику на backdrop и на крестик (оба с data-close)
     if (t && t.dataset && ("close" in t.dataset)) closeModal();
   });
 
@@ -122,16 +122,16 @@ function render() {
   const items = Object.values(cart);
 
   if (items.length === 0) {
-    if (status) status.textContent = "Корзина пустая.";
+    if (status) status.textContent = "Your cart is empty.";
     const empty = document.createElement("div");
     empty.className = "muted";
-    empty.textContent = "Добавь товары на главной странице.";
+    empty.textContent = "Add products from the main page.";
     list.appendChild(empty);
-    totalEl.textContent = "0 сум";
+    totalEl.textContent = "0 sum";
     return;
   }
 
-  if (status) status.textContent = `Позиций: ${items.length}`;
+  if (status) status.textContent = `Items: ${items.length}`;
 
   for (const item of items) {
     const row = document.createElement("div");
@@ -139,31 +139,36 @@ function render() {
 
     const img = document.createElement("img");
     img.className = "cart-item__img";
-    img.alt = item.name || "Товар";
+    img.alt = item.name || "Product";
     img.src = item.link || "";
     img.loading = "lazy";
-    img.onerror = () => { img.src = ""; img.alt = "Нет изображения"; };
+    img.onerror = () => {
+      img.src = "";
+      img.alt = "No image";
+    };
 
     const info = document.createElement("div");
 
     const name = document.createElement("p");
     name.className = "cart-item__name";
-    name.textContent = item.name || "Без названия";
+    name.textContent = item.name || "Unnamed product";
 
     const meta = document.createElement("div");
     meta.className = "cart-item__meta";
 
     const price = document.createElement("span");
     price.className = "pill";
-    price.textContent = `Цена: ${formatPrice(item.price)} сум`;
+    price.textContent = `Price: ${formatPrice(item.price)} sum`;
 
     const qtyPill = document.createElement("span");
     qtyPill.className = "pill";
-    qtyPill.textContent = `Кол-во: ${item.qty}`;
+    qtyPill.textContent = `Qty: ${item.qty}`;
 
     const sum = document.createElement("span");
     sum.className = "pill";
-    sum.textContent = `Сумма: ${formatPrice((Number(item.price)||0) * (Number(item.qty)||0))} сум`;
+    sum.textContent = `Subtotal: ${formatPrice(
+      (Number(item.price) || 0) * (Number(item.qty) || 0)
+    )} sum`;
 
     meta.appendChild(price);
     meta.appendChild(qtyPill);
@@ -178,24 +183,21 @@ function render() {
     actions.style.justifyContent = "flex-end";
     actions.style.flexWrap = "wrap";
 
-    // - кнопка
     const minusBtn = document.createElement("button");
     minusBtn.className = "btn";
     minusBtn.textContent = "−";
-    minusBtn.title = "Уменьшить количество";
+    minusBtn.title = "Decrease quantity";
     minusBtn.addEventListener("click", () => changeQty(item.id, -1));
 
-    // + кнопка
     const plusBtn = document.createElement("button");
     plusBtn.className = "btn";
     plusBtn.textContent = "+";
-    plusBtn.title = "Увеличить количество";
+    plusBtn.title = "Increase quantity";
     plusBtn.addEventListener("click", () => changeQty(item.id, +1));
 
-    // удалить
     const delBtn = document.createElement("button");
     delBtn.className = "btn btn--danger";
-    delBtn.textContent = "Удалить";
+    delBtn.textContent = "Remove";
     delBtn.addEventListener("click", () => removeItem(item.id));
 
     actions.appendChild(minusBtn);
@@ -209,10 +211,10 @@ function render() {
     list.appendChild(row);
   }
 
-  totalEl.textContent = `${formatPrice(calcTotal(cart))} сум`;
+  totalEl.textContent = `${formatPrice(calcTotal(cart))} sum`;
 }
 
-/* ---------- buttons (buy/clear) ---------- */
+/* ---------- buttons (checkout/clear) ---------- */
 function bindActions() {
   const buyBtn = document.getElementById("buyBtn");
   const clearBtn = document.getElementById("clearBtn");
@@ -221,11 +223,11 @@ function bindActions() {
     clearBtn.addEventListener("click", () => {
       const cart = getCart();
       if (cartCount(cart) === 0) {
-        openModal("Корзина", "Корзина уже пустая 🙂");
+        openModal("Cart", "Cart is already empty 🙂");
         return;
       }
       clearCart();
-      openModal("Корзина", "Корзина очищена ✅");
+      openModal("Cart", "Cart has been cleared ✅");
     });
   }
 
@@ -236,12 +238,15 @@ function bindActions() {
       const total = calcTotal(cart);
 
       if (count === 0) {
-        openModal("Корзина", "Корзина пустая 🙂");
+        openModal("Cart", "Your cart is empty 🙂");
         return;
       }
 
-      // сообщение с суммой
-      openModal("Покупка", `Заказ оформлен ✅\nСумма: ${formatPrice(total)} сум`);
+      openModal(
+        "Order Complete",
+        `Order placed successfully ✅\nTotal: ${formatPrice(total)} sum`
+      );
+
       localStorage.removeItem(CART_KEY);
       render();
     });
